@@ -4,9 +4,9 @@
       console.log(ctx);
       let direction = "RIGHT";  
       const box = 20;
-      let game = setInterval(draw,300);
+      let game = setInterval( draw,300); 
       const snake = [{ x: 9 * box, y: 10 * box }];
-
+      let score = 0;
       let food = {
         x: Math.floor(Math.random() * 19) * box,
         y: Math.floor(Math.random() * 19) * box
@@ -18,13 +18,15 @@
         if(event.key === "ArrowUp"&& direction !="DOWN") direction = "UP";
         if(event.key === "ArrowRight"&& direction !="LEFT") direction = "RIGHT";
         if(event.key === "ArrowDown"&& direction !="UP") direction = "DOWN";
+        if(event.key === "p"|| event.key === "P") clearInterval(game);
+        if(event.key === "r"|| event.key === "R") game = setInterval( draw,300);
       }
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // draw snake
         snake.forEach((part, index) => {
-          ctx.fillStyle = index === 0 ? "lime" : "green";
+          ctx.fillStyle = index === 0 ? "lime" : "blue";
           ctx.fillRect(part.x, part.y, box, box);
         });
 
@@ -40,9 +42,9 @@
       if(direction === "RIGHT") headX += box;
       if(direction === "DOWN") headY += box;
       //fonction pour dessiner le serpent et la nourriture
-      if( headX <= 0 || headX >= canvas.width || headY <= 0 || headY >= canvas.height) {
-        setInterval(game);
-        alert("Game Over");
+      if (headX < 0 || headX + box > canvas.width || headY < 0 || headY + box > canvas.height) {
+      alert("Game Over");
+       clearInterval(game);
       }
        
       // nouvelle position de la tete du serpent
@@ -50,7 +52,20 @@
         x: headX,
         y:headY};
       snake.unshift(newHead);
-      snake.pop();
-      
+      //snake.pop();
+      //verifie si le serpent mange la nourriture
+    if(headX === food.x && headY === food.y){
+        score+=50;
+        document.getElementById("score").innerHTML = "score:" + score;
+        //genere une nouvelle nourriture a une position aleatoire
+        food = {
+            x: Math.floor(Math.random() * 19) * box,
+            y: Math.floor(Math.random() * 19) * box
+        };
       }
-    setInterval( draw,150); 
+        else {
+          snake.pop(); 
+        }
+        }  
+   game; 
+   
